@@ -34,7 +34,7 @@ var powerup2;
 var powerup3;
 var bulletCount;
 var health = 100;
-var gamestate = "play";
+var gamestate = "instructions";
 var gameOver;
 var restart;
 var button1;
@@ -55,6 +55,8 @@ var shield;
 var shieldImage;
 var isShieldActive = false;
 var shieldCollectible;
+var showLevelText = false;
+
 
 
 
@@ -82,6 +84,7 @@ function preload() {
     background2Image = loadImage("background2.png")
     shieldImage = loadImage("shield.png")
 
+
 }
 
 function setup() {
@@ -102,12 +105,12 @@ function setup() {
     // button2.style('height', "50px")
     // button2.style('width', "100px")
 
-    button3 = createButton('POWERUP 3');
-    button3.position(windowWidth - 150, 850);
-    button3.mousePressed(ActivatePowerup3);
-    button3.style('background-color', "yellow")
-    button3.style('height', "50px")
-    button3.style('width', "100px")
+    // button3 = createButton('POWERUP 3');
+    // button3.position(windowWidth - 150, 850);
+    // button3.mousePressed(ActivatePowerup3);
+    // button3.style('background-color', "yellow")
+    // button3.style('height', "50px")
+    // button3.style('width', "100px")
 
     x2 = width;
     player = createSprite(80, 480, 59, 66);
@@ -130,7 +133,7 @@ function setup() {
 
     bulletCount = 20;
     gameOver.visible = false;
-    SpawnZombielogic();
+
 }
 
 function BackgroundMovement() {
@@ -244,27 +247,38 @@ function ActivatePowerup3() { }
 
 function AddScore(increase) {
     score = score + increase;
-    if (score % 30 == 0) {
-        SpawnZombielogic();
-        bgImage = background2Image;
-        zombieWorld = true;
+    if (score % 20 == 0) {
+        showLevelText = true;
+        setTimeout(() => {
+            SpawnZombielogic();
+            bgImage = background2Image;
+            zombieWorld = true;
+            showLevelText = false;
+        }, 3000)
     }
     if (score % 10 == 0) {
         isPowerUp1Enabled = true;
         SpawnHealthCollectible();
         button1.style('display', "block")
     }
-    if (score % 18 == 0) {
+    if (score % 8 == 0) {
         var y = random(windowHeight * .7, windowHeight * .5)
         SpawnshieldCollectible(windowWidth, y);
 
     }
+
 }
 
 
 function draw() {
 
     switch (gamestate) {
+        case 'instructions':
+            BackgroundMovement();
+            ApplyGravity()
+          
+
+            break;
         case 'play':
             BackgroundMovement();
             ApplyGravity()
@@ -291,6 +305,7 @@ function draw() {
             if (shieldCollectible) {
                 shieldCollectible.overlap(player, (a, b) => {
                     a.remove();
+                    shieldCollectible = null;
                     isShieldActive = true;
                 })
             }
@@ -309,10 +324,16 @@ function draw() {
                     isShieldActive = false;
                     shield = null;
                 })
+
             }
 
+            if (showLevelText) {
+                strokeWeight(10)
+                textStyle(BOLD)
+                textSize(48);
+                text(" Get ready for zombies  ", (windowWidth / 2 - 250) , windowHeight / 2 - 200)
 
-
+            }
 
 
 
@@ -359,6 +380,7 @@ function draw() {
             spawnGerms();
 
             textSize(25);
+            textStyle(NORMAL)
             fill(0)
             text(" Score  " + score, windowWidth - 207, 80)
             text("Bullets Left  " + bulletCount, windowWidth - 200, 50);
@@ -382,6 +404,7 @@ function draw() {
             }
             break;
     }
+
     drawSprites();
 
 
