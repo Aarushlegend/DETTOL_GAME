@@ -56,6 +56,7 @@ var shieldImage;
 var isShieldActive = false;
 var shieldCollectible;
 var showLevelText = false;
+var instructionsImage;
 
 
 
@@ -83,6 +84,7 @@ function preload() {
     zombie = loadAnimation('./zombie1.png', './zombie2.png', './zombie3.png', './zombie4.png', './zombie5.png')
     background2Image = loadImage("background2.png")
     shieldImage = loadImage("shield.png")
+    instructionsImage = loadImage("instructions.png")
 
 
 }
@@ -122,7 +124,7 @@ function setup() {
 
     ground = createSprite(windowWidth / 2, windowHeight * .82, windowWidth, 10);
     leftWall = createSprite(-50, windowHeight / 2, 10, windowHeight);
-    rightWall = createSprite(windowWidth + 50, windowHeight / 2, 10, windowHeight);
+    rightWall = cameOver = createSprite(windowWidth + 50, windowHeight / 2, 10, windowHeight);
     gameOver = createSprite(windowWidth / 2, windowHeight / 3)
     gameOver.addImage(gameOverImage)
     ground.visible = false;
@@ -133,8 +135,8 @@ function setup() {
 
     bulletCount = 20;
     gameOver.visible = false;
-
 }
+    
 
 function BackgroundMovement() {
     image(bgImage, x1, 0, width, windowHeight);
@@ -276,7 +278,9 @@ function draw() {
         case 'instructions':
             BackgroundMovement();
             ApplyGravity()
-          
+            instruction = createSprite(windowWidth/2 ,windowHeight/2 - 200,300,300)
+            instruction.addImage(instructionsImage)
+            instruction.scale = 0.3
 
             break;
         case 'play':
