@@ -9,6 +9,7 @@ var bulletSound;
 var bulletCock;
 var walking;
 var germ1, germ1Image;
+var playButtonImage, playButton;
 var germsGroup;
 var zombieGroup;
 var b = 35;
@@ -58,13 +59,6 @@ var shieldCollectible;
 var showLevelText = false;
 var instructionsImage;
 
-
-
-
-
-
-
-
 function preload() {
 
     background1Image = loadImage('./background.jpg')
@@ -85,7 +79,7 @@ function preload() {
     background2Image = loadImage("background2.png")
     shieldImage = loadImage("shield.png")
     instructionsImage = loadImage("Instructions.png")
-
+    playButtonImage = loadImage("./playButton.png");
 
 }
 
@@ -115,7 +109,7 @@ function setup() {
     // button3.style('width', "100px")
 
     x2 = width;
-    player = createSprite(80, 480, 59, 66);
+    player = createSprite(80, (windowHeight / 2), 59, 66);
     player.scale = 2;
     player.addAnimation('running', player_sprite_sheet);
     player.animation.frameDelay = 7;
@@ -135,9 +129,15 @@ function setup() {
 
     bulletCount = 20;
     gameOver.visible = false;
-    instruction = createSprite(windowWidth/2 ,windowHeight/2 ,300,300)
+    instruction = createSprite(windowWidth / 2, windowHeight / 2.5, 1, 1);
+    playButton = createSprite(windowWidth / 2, windowHeight - (windowHeight / 10), 10, 10);
+    playButton.addImage(playButtonImage);
+    instruction.addImage(instructionsImage);
+    playButton.scale = 2;
+    instruction.scale = .2;
+
 }
-    
+
 
 function BackgroundMovement() {
     image(bgImage, x1, 0, width, windowHeight);
@@ -202,7 +202,7 @@ function ApplyGravity() {
 }
 
 
-function GameOverConditions() { }
+function GameOverConditions() {}
 
 function ZombieControl() {
     if (frameCount % 120 === 0) {
@@ -246,7 +246,7 @@ function ActivatePowerup2() {
     }
 }
 
-function ActivatePowerup3() { }
+function ActivatePowerup3() {}
 
 function AddScore(increase) {
     score = score + increase;
@@ -278,9 +278,16 @@ function draw() {
     switch (gamestate) {
         case 'instructions':
             BackgroundMovement();
-            ApplyGravity()
-            instruction.addImage(instructionsImage)
-            instruction.scale = 0.4
+            ApplyGravity();
+            if (mouseIsPressed) {
+                if (playButton.overlapPixel(mouseX, mouseY)) {
+                    playButton.remove();
+                    instruction.remove();
+                    gamestate = 'play';
+                }
+
+            }
+
 
             break;
         case 'play':
@@ -335,7 +342,7 @@ function draw() {
                 strokeWeight(10)
                 textStyle(BOLD)
                 textSize(48);
-                text(" Get ready for zombies  ", (windowWidth / 2 - 250) , windowHeight / 2 - 200)
+                text(" Get ready for zombies  ", (windowWidth / 2 - 250), windowHeight / 2 - 200)
 
             }
 
@@ -526,6 +533,7 @@ function SpawnZombielogic() {
         SpawnZombie();
     }, random(12000, 17000));
 }
+
 function SpawnshieldCollectible(x, y) {
 
     shieldCollectible = createSprite(x, y);
