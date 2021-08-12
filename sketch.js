@@ -1,4 +1,4 @@
-var bg, bgImage;
+var bg, bgImage1, bgImage2, bgImage3, bgImage4;
 var player, playerImage;
 var ground;
 var leftWall, reightWall;
@@ -7,6 +7,7 @@ var bulletGroup;
 var bulletImage;
 var bulletSound;
 var bulletCock;
+var zombieWorldStartScore = 20;
 var walking;
 var germ1, germ1Image;
 var playButtonImage, playButton;
@@ -25,6 +26,8 @@ var walking;
 var GRAVITY = 0.3;
 var x1 = 0;
 var x2;
+var x3;
+var x4;
 var score = 0;
 var count = 0;
 var isGrounded = false;
@@ -62,7 +65,7 @@ var instructionsImage;
 function preload() {
 
     background1Image = loadImage('./background.jpg')
-    bgImage = background1Image;
+    bgImage1 = bgImage2 = background1Image;
     bulletImage = loadImage("./bullet.png")
     bulletSound = loadSound("./shot.mp3")
     bulletCock = loadSound("./gunCock.mp3")
@@ -133,24 +136,45 @@ function setup() {
     playButton = createSprite(windowWidth / 2, windowHeight - (windowHeight / 10), 10, 10);
     playButton.addImage(playButtonImage);
     instruction.addImage(instructionsImage);
-    playButton.scale = 2;
-    instruction.scale = .2;
+    //playButton.scale = 2;
+    instruction.scale = .35;
 
 }
 
 
 function BackgroundMovement() {
-    image(bgImage, x1, 0, width, windowHeight);
-    image(bgImage, x2, 0, width, windowHeight);
+    if (bgImage1) {
+        image(bgImage1, x1, 0, width, windowHeight);
+        image(bgImage2, x2, 0, width, windowHeight);
+    }
+    if (bgImage3) {
+        image(bgImage3, x3, 0, width, windowHeight);
+        image(bgImage4, x4, 0, width, windowHeight);
+    }
     x1 -= 1.5;
     x2 -= 1.5;
+    x3 -= 1.5;
+    x4 -= 1.5;
+
 
     if (x1 < -width) {
         x1 = width;
     }
+
     if (x2 < -width) {
         x2 = width;
+
     }
+
+    if (x3 < -width) {
+        x3 = width;
+
+    }
+    if (x4 < -width) {
+        x4 = width;
+
+    }
+
 }
 
 function PlayerControls() {
@@ -250,11 +274,15 @@ function ActivatePowerup3() {}
 
 function AddScore(increase) {
     score = score + increase;
-    if (score % 20 == 0) {
+    if (score % zombieWorldStartScore == 0 && zombieWorld === false) {
         showLevelText = true;
+        zombieWorldStartScore = 25;
         setTimeout(() => {
             SpawnZombielogic();
-            bgImage = background2Image;
+            bgImage3 = background2Image;
+            bgImage4 = background2Image;
+            x3 = width;
+            x4 = width * 2;
             zombieWorld = true;
             showLevelText = false;
         }, 3000)
@@ -384,7 +412,8 @@ function draw() {
                 if (zombieGroup.length == 0) {
 
                     zombieWorld = false;
-                    bgImage = background1Image;
+                    bgImage3 = null;
+                    // bgImage = background1Image;
                 }
             })
 
