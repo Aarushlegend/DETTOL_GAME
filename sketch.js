@@ -81,7 +81,7 @@ function preload() {
     zombie = loadAnimation('./zombie1.png', './zombie2.png', './zombie3.png', './zombie4.png', './zombie5.png')
     background2Image = loadImage("background2.png")
     shieldImage = loadImage("shield.png")
-    instructionsImage = loadImage("Instructions.png")
+    instructionsImage = loadImage("screenshot.png")
     playButtonImage = loadImage("./playButton.png");
 
 }
